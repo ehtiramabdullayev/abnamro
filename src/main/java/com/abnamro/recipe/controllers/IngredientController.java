@@ -1,6 +1,7 @@
 package com.abnamro.recipe.controllers;
 
 import com.abnamro.recipe.api.request.CreateIngredientRequest;
+import com.abnamro.recipe.api.request.UpdateRecipeRequest;
 import com.abnamro.recipe.api.response.CreateEntityResponse;
 import com.abnamro.recipe.api.response.IngredientResponse;
 import com.abnamro.recipe.models.Ingredient;
@@ -57,7 +58,7 @@ public class IngredientController {
     })
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public CreateEntityResponse createBook(
+    public CreateEntityResponse createIngredient(
             @ApiParam(value = "Properties of the Ingredient", required = true) @Valid @RequestBody CreateIngredientRequest request) {
         Integer id = ingredientService.create(request);
         return new CreateEntityResponse(id);

@@ -1,6 +1,9 @@
 package com.abnamro.recipe.services;
 
 import com.abnamro.recipe.api.request.CreateRecipeRequest;
+import com.abnamro.recipe.api.request.UpdateRecipeRequest;
+import com.abnamro.recipe.config.MessageProvider;
+import com.abnamro.recipe.exceptions.NotFoundException;
 import com.abnamro.recipe.models.Ingredient;
 import com.abnamro.recipe.models.Recipe;
 import com.abnamro.recipe.repositories.RecipeRepository;
@@ -8,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,11 +20,16 @@ import java.util.Set;
 public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final IngredientService ingredientService;
+    private final MessageProvider messageProvider;
+
 
     @Autowired
-    public RecipeService(RecipeRepository recipeRepository, IngredientService ingredientService) {
+    public RecipeService(RecipeRepository recipeRepository,
+                         IngredientService ingredientService,
+                         MessageProvider messageProvider) {
         this.recipeRepository = recipeRepository;
         this.ingredientService = ingredientService;
+        this.messageProvider = messageProvider;
     }
 
     public Integer createRecipe(CreateRecipeRequest createRecipeRequest) {
@@ -30,7 +39,7 @@ public class RecipeService {
 
         Recipe recipe = new Recipe();
         recipe.setName(createRecipeRequest.getName());
-        recipe.setInstruction(createRecipeRequest.getInstructions());
+        recipe.setInstructions(createRecipeRequest.getInstructions());
         recipe.setType(createRecipeRequest.getType());
         recipe.setNumberOfServings(createRecipeRequest.getNumberOfServings());
         recipe.setRecipeIngredients(ingredients);
@@ -38,5 +47,42 @@ public class RecipeService {
         Recipe createdRecipe = recipeRepository.save(recipe);
 
         return createdRecipe.getId();
+    }
+
+    public List<Recipe> getRecipeList() {
+        return recipeRepository.findAll();
+    }
+
+    public Recipe getRecipeById(int id) {
+        return recipeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(messageProvider.getMessage("recipe.notFound")));
+    }
+
+    public void updateRecipe(UpdateRecipeRequest updateRecipeRequest) {
+        Recipe recipe = recipeRepository.findById(updateRecipeRequest.getId())
+                .orElseThrow(() -> new NotFoundException(messageProvider.getMessage("recipe.notFound")));
+
+        Set<Ingredient> ingredients = Optional.ofNullable(updateRecipeRequest.getIngredientIds())
+                .map(ingredientService::getIngredientsByIds)
+                .orElse(null);
+
+        recipe.setName(updateRecipeRequest.getName());
+        recipe.setType(updateRecipeRequest.getType());
+        recipe.setNumberOfServings(updateRecipeRequest.getNumberOfServings());
+        recipe.setInstructions(updateRecipeRequest.getInstructions());
+
+        if (ingredients != null) {
+            recipe.setRecipeIngredients(ingredients);
+        }
+
+        recipeRepository.save(recipe);
+    }
+
+    public void deleteRecipe(int id) {
+        if (!recipeRepository.existsById(id)) {
+            throw new NotFoundException(messageProvider.getMessage("recipe.notFound"));
+        }
+
+        recipeRepository.deleteById(id);
     }
 }

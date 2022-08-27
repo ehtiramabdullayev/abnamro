@@ -30,7 +30,7 @@ public class Recipe extends BasicEntity {
 
 
     @Column
-    private String instruction;
+    private String instructions;
 
 
     @Column
@@ -77,12 +77,12 @@ public class Recipe extends BasicEntity {
         return recipeIngredients;
     }
 
-    public String getInstruction() {
-        return instruction;
+    public String getInstructions() {
+        return instructions;
     }
 
-    public void setInstruction(String instruction) {
-        this.instruction = instruction;
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
     }
 
     public RecipeType getType() {

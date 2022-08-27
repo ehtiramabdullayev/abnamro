@@ -35,8 +35,8 @@ public class IngredientService {
     }
 
 
-    public Set<Ingredient> getIngredientsByIds(List<Integer> authorIds) {
-        return authorIds.stream()
+    public Set<Ingredient> getIngredientsByIds(List<Integer> ingredientIds) {
+        return ingredientIds.stream()
                 .map(this::findById)
                 .collect(Collectors.toSet());
     }
