@@ -1,6 +1,7 @@
-package com.abnamro.recipe.validator;
+package com.abnamro.recipe.unit.validator;
 
 import com.abnamro.recipe.api.request.SearchCriteriaRequest;
+import com.abnamro.recipe.validator.EnumValidatorConstraint;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.validation.Validator;

@@ -1,7 +1,6 @@
 package com.abnamro.recipe.controllers;
 
 import com.abnamro.recipe.api.request.CreateIngredientRequest;
-import com.abnamro.recipe.api.request.UpdateRecipeRequest;
 import com.abnamro.recipe.api.response.CreateEntityResponse;
 import com.abnamro.recipe.api.response.IngredientResponse;
 import com.abnamro.recipe.models.Ingredient;
