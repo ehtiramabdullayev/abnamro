@@ -22,7 +22,7 @@ public class RecipeResponse {
     private String name;
 
     @ApiModelProperty(notes = "The type of the returned recipe", example = "VEGETARIAN")
-    private RecipeType type;
+    private String type;
 
     @ApiModelProperty(notes = "Number of servings", example = "1")
     private int numberOfServings;
@@ -70,7 +70,7 @@ public class RecipeResponse {
         return name;
     }
 
-    public RecipeType getType() {
+    public String getType() {
         return type;
     }
 

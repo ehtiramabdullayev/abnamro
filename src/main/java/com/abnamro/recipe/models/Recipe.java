@@ -28,14 +28,11 @@ public class Recipe extends BasicEntity {
     @JsonIgnoreProperties("ingredientRecipes")
     private Set<Ingredient> recipeIngredients;
 
-
     @Column
     private String instructions;
 
-
     @Column
-    @Enumerated(EnumType.STRING)
-    private RecipeType type;
+    private String type;
 
     @Column(updatable = false)
     @CreationTimestamp
@@ -84,11 +81,11 @@ public class Recipe extends BasicEntity {
         this.instructions = instructions;
     }
 
-    public RecipeType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(RecipeType type) {
+    public void setType(String type) {
         this.type = type;
     }
 

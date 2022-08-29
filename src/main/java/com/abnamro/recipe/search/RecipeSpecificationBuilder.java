@@ -3,19 +3,14 @@ package com.abnamro.recipe.search;
 import com.abnamro.recipe.models.Recipe;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RecipeSpecificationBuilder {
     private final List<SearchCriteria> params;
 
-    public RecipeSpecificationBuilder() {
-        this.params = new ArrayList<>();
-    }
-
-    public final RecipeSpecificationBuilder with(String key, String operation, Object value){
-        params.add(new SearchCriteria(key, operation, value));
-        return this;
+    public RecipeSpecificationBuilder(List<SearchCriteria> searchCriteria) {
+        this.params = searchCriteria;
     }
 
     public final RecipeSpecificationBuilder with(SearchCriteria searchCriteria){
@@ -23,9 +18,9 @@ public class RecipeSpecificationBuilder {
         return this;
     }
 
-    public Specification<Recipe> build(){
+    public Optional<Specification<Recipe>> build(){
         if(params.size() == 0){
-            return null;
+            return Optional.empty();
         }
 
         Specification<Recipe> result = new RecipeSpecification(params.get(0));
@@ -36,6 +31,6 @@ public class RecipeSpecificationBuilder {
                     : Specification.where(result).or(new RecipeSpecification(criteria));
         }
 
-        return result;
+        return Optional.of(result);
     }
 }

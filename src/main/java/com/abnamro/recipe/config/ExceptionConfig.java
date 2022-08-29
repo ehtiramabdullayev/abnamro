@@ -1,6 +1,7 @@
 package com.abnamro.recipe.config;
 
 import com.abnamro.recipe.api.response.GenericResponse;
+import com.abnamro.recipe.exceptions.ICustomException;
 import com.abnamro.recipe.exceptions.NotFoundException;
 import com.abnamro.recipe.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +94,17 @@ public class ExceptionConfig {
     public ResponseEntity<GenericResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         String message = messageProvider.getMessage("json.invalidFormat");
         return buildResponse(message, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseBody
+    public ResponseEntity<GenericResponse> handleRuntimeException(RuntimeException exp) {
+        if (exp instanceof ICustomException) {
+            return buildResponse(exp.getMessage(), ((ICustomException) exp).getStatus());
+        }
+
+        String message = messageProvider.getMessage("error.internalServerError");
+        return buildResponse(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 

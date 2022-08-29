@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,27 +104,17 @@ public class RecipeController {
     @RequestMapping(method = RequestMethod.POST, path = "/search")
     public List<RecipeResponse> searchRecipe(@RequestParam(name = "pageNum", defaultValue = "0") int pageNum,
                                              @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
-                                             @ApiParam(value = "Properties of the recipe", required = false)
-                                             @RequestBody(required = false) RecipeSearchRequest recipeSearchRequest) {
+                                             @ApiParam(value = "Properties of the the search")
+                                             @RequestBody RecipeSearchRequest recipeSearchRequest) {
 
-
-        RecipeSpecificationBuilder builder = new RecipeSpecificationBuilder();
-        List<SearchCriteria> criteriaList = recipeSearchRequest.getSearchCriteriaList();
-        if (criteriaList != null) {
-            criteriaList.forEach(x -> {
-                x.setDataOption(recipeSearchRequest.getDataOption());
-                builder.with(x);
-            });
-
-        }
+        List<SearchCriteria> searchCriteria = new ArrayList<>();
+        RecipeSpecificationBuilder builder = new RecipeSpecificationBuilder(searchCriteria);
         Pageable page = PageRequest.of(pageNum, pageSize, Sort.by("name")
                 .ascending());
 
+        Page<Recipe> filteredRecipes = recipeService.findBySearchCriteria(recipeSearchRequest,builder, page);
 
-        Page<Recipe> bySearchCriteria = recipeService.findBySearchCriteria(builder.build(), page);
-
-
-        return bySearchCriteria.toList().stream()
+        return filteredRecipes.toList().stream()
                 .map(RecipeResponse::new)
                 .collect(Collectors.toList());
 

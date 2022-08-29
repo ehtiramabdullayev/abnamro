@@ -2,9 +2,9 @@ package com.abnamro.recipe.api.request;
 
 import com.abnamro.recipe.config.ValidationConfig;
 import com.abnamro.recipe.models.RecipeType;
+import com.abnamro.recipe.validator.EnumValidator;
+import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
 import java.util.List;
 
@@ -14,8 +14,9 @@ public class UpdateRecipeRequest extends BasicRequest{
     @Pattern(regexp = ValidationConfig.PATTERN_NAME, message = "{recipeName.pattern}")
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private RecipeType type;
+    @ApiModelProperty(notes = "The type of the recipe", example = "VEGETARIAN")
+    @EnumValidator(enumClass = RecipeType.class, message = "{recipeType.invalid}")
+    private String type;
 
     @NotNull(message = "{numberOfServings.notNull}")
     @Positive(message = "{numberOfServings.positive}")
@@ -31,7 +32,7 @@ public class UpdateRecipeRequest extends BasicRequest{
     public UpdateRecipeRequest() {
     }
 
-    public UpdateRecipeRequest(Integer id, String name, RecipeType type, int numberOfServings, List<Integer> ingredientIds, String instructions) {
+    public UpdateRecipeRequest(Integer id, String name, String type, int numberOfServings, List<Integer> ingredientIds, String instructions) {
         super(id);
         this.name = name;
         this.type = type;
@@ -44,7 +45,7 @@ public class UpdateRecipeRequest extends BasicRequest{
         return name;
     }
 
-    public RecipeType getType() {
+    public String getType() {
         return type;
     }
 

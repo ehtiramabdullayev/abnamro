@@ -1,6 +1,8 @@
 package com.abnamro.recipe.search;
 
 public class SearchCriteria {
+
+
     private String filterKey;
     private Object value;
     private String operation;
