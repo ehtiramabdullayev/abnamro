@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -58,8 +59,8 @@ public class IngredientControllerIntegrationTest extends AbstractControllerInteg
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(savedIngredient.getId()))
                 .andExpect(jsonPath("$.name").value(ingredient.getIngredient()))
-                .andExpect(jsonPath("$.createdAt").value(ingredient.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"))))
-                .andExpect(jsonPath("$.updatedAt").value(ingredient.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"))));
+                .andExpect(jsonPath("$.createdAt").value(ingredient.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))))
+                .andExpect(jsonPath("$.updatedAt").value(ingredient.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
     }
 
     @Test
@@ -90,11 +91,34 @@ public class IngredientControllerIntegrationTest extends AbstractControllerInteg
         Ingredient ingredient = IngredientTestDataBuilder.createIngredient();
         Ingredient savedIngredient = ingredientRepository.save(ingredient);
 
-        performDelete("/api/v1/ingredient?id="+savedIngredient.getId())
+        performDelete("/api/v1/ingredient?id=" + savedIngredient.getId())
                 .andExpect(status().isOk());
 
         Optional<Ingredient> deletedIngredient = ingredientRepository.findById(savedIngredient.getId());
         assertTrue(deletedIngredient.isEmpty());
+    }
+
+    @Test
+    public void test_findIngredientById_successfully() throws Exception {
+        Ingredient ingredient = IngredientTestDataBuilder.createIngredient();
+        Ingredient savedIngredient = ingredientRepository.save(ingredient);
+
+        MvcResult result = performGet("/api/v1/ingredient/" + savedIngredient.getId())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(savedIngredient.getId()))
+                .andExpect(jsonPath("$.name").value(savedIngredient.getIngredient()))
+                .andReturn();
+
+        IngredientResponse ingredientResponse = getFromMvcResult(result, IngredientResponse.class);
+        assertEquals(savedIngredient.getIngredient(), ingredientResponse.getName());
+    }
+
+    @Test
+    public void test_findIngredientById_fails() throws Exception {
+
+        performGet("/api/v1/ingredient/" + 1)
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").exists());
     }
 
     @Test

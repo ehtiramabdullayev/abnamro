@@ -4,9 +4,13 @@ import com.abnamro.recipe.api.request.CreateRecipeRequest;
 import com.abnamro.recipe.api.request.RecipeSearchRequest;
 import com.abnamro.recipe.api.request.SearchCriteriaRequest;
 import com.abnamro.recipe.api.response.RecipeResponse;
+import com.abnamro.recipe.models.Ingredient;
 import com.abnamro.recipe.models.Recipe;
+import com.abnamro.recipe.repositories.IngredientRepository;
 import com.abnamro.recipe.repositories.RecipeRepository;
+import com.abnamro.recipe.utils.builder.IngredientTestDataBuilder;
 import com.abnamro.recipe.utils.builder.RecipeTestDataBuilder;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RecipeControllerIntegrationTest extends AbstractControllerIntegrationTest {
     @Autowired
     private RecipeRepository recipeRepository;
+
+    @Autowired
+    private IngredientRepository ingredientRepository;
 
     @Before
     public void before() {
@@ -167,12 +174,19 @@ public class RecipeControllerIntegrationTest extends AbstractControllerIntegrati
 
     @Test
     public void test_SearchRecipeByCriteria_successfully() throws Exception {
+        //create ingredient for recipe
+        Ingredient ingredient = IngredientTestDataBuilder.createIngredient();
+        Ingredient savedIngredient = ingredientRepository.save(ingredient);
+
+        //create the recipe
         CreateRecipeRequest createRecipeRequest = new CreateRecipeRequest("pasta",
-                "OTHER", 5, null, "someInstruction");
+                "OTHER", 5, List.of(savedIngredient.getId()), "someInstruction");
 
         MvcResult createdRecipe = performPost("/api/v1/recipe", createRecipeRequest)
                 .andExpect(status().isCreated())
                 .andReturn();
+
+        //prepare the search criteria and by newly created id
         Integer id = readByJsonPath(createdRecipe, "$.id");
 
         RecipeSearchRequest request = new RecipeSearchRequest();
@@ -186,14 +200,28 @@ public class RecipeControllerIntegrationTest extends AbstractControllerIntegrati
         request.setDataOption("ALL");
         request.setSearchCriteriaRequests(searchCriteriaList);
 
+        //call search endpoint by previously created criteria
         MvcResult result = performPost("/api/v1/recipe/search", request)
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Integer foundId = readByJsonPath(result, "$.id");
-
         Optional<Recipe> optionalRecipe = recipeRepository.findById(id);
-        assertEquals(optionalRecipe.get().getId(), id);
+
+
+        List<RecipeResponse> listRecipeList = getListFromMvcResult(result, RecipeResponse.class);
+        assertEquals(listRecipeList.size(), listRecipeList.size());
+        Assert.assertTrue(optionalRecipe.isPresent());
+        Assert.assertEquals(listRecipeList.get(0).getName(), optionalRecipe.get().getName());
+        Assert.assertEquals(listRecipeList.get(0).getInstructions(), optionalRecipe.get().getInstructions());
+        Assert.assertEquals(listRecipeList.get(0).getNumberOfServings(), optionalRecipe.get().getNumberOfServings());
+    }
+
+    @Test
+    public void test_SearchRecipeByCriteria_fails() throws Exception {
+        performPost("/api/v1/recipe/search", null)
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").exists())
+                .andReturn();
     }
 
 }
