@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,4 +65,8 @@ public class IngredientController {
         return new CreateEntityResponse(id);
     }
 
+    @RequestMapping(method = RequestMethod.DELETE)
+    public void deleteIngredient(@NotNull @RequestParam(name = "id") Integer id) {
+        ingredientService.delete(id);
+    }
 }

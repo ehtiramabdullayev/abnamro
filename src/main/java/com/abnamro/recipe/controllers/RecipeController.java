@@ -10,6 +10,8 @@ import com.abnamro.recipe.search.RecipeSpecificationBuilder;
 import com.abnamro.recipe.search.SearchCriteria;
 import com.abnamro.recipe.services.RecipeService;
 import io.swagger.annotations.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "api/v1/recipe")
 public class RecipeController {
+    private final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
     private final RecipeService recipeService;
 
@@ -43,6 +46,7 @@ public class RecipeController {
     })
     @RequestMapping(method = RequestMethod.GET)
     public List<RecipeResponse> getRecipeList() {
+        logger.info("Getting the recipes");
         List<Recipe> list = recipeService.getRecipeList();
 
         return list.stream()
@@ -57,6 +61,7 @@ public class RecipeController {
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public RecipeResponse getRecipe(@ApiParam(value = "Recipe ID", required = true) @PathVariable(name = "id") Integer id) {
+        logger.info("Getting the recipe by its id. Id: {}", id);
         Recipe recipe = recipeService.getRecipeById(id);
         return new RecipeResponse(recipe);
     }
@@ -70,6 +75,7 @@ public class RecipeController {
     @ResponseStatus(HttpStatus.CREATED)
     public CreateEntityResponse createRecipe(
             @ApiParam(value = "Properties of the recipe", required = true) @Valid @RequestBody CreateRecipeRequest request) {
+        logger.info("Creating the recipe with properties");
         Integer id = recipeService.createRecipe(request);
         return new CreateEntityResponse(id);
     }
@@ -82,6 +88,7 @@ public class RecipeController {
     @RequestMapping(method = RequestMethod.PATCH)
     public void updateRecipe(
             @ApiParam(value = "Properties of the recipe", required = true) @Valid @RequestBody UpdateRecipeRequest updateRecipeRequest) {
+        logger.info("Updating the recipe by given properties");
         recipeService.updateRecipe(updateRecipeRequest);
     }
 
@@ -94,6 +101,7 @@ public class RecipeController {
     @RequestMapping(method = RequestMethod.DELETE)
     public void deleteRecipe(
             @ApiParam(value = "Recipe ID", required = true) @NotNull(message = "{id.notNull}") @RequestParam(name = "id") Integer id) {
+        logger.info("Deleting the recipe by its id. Id: {}", id);
         recipeService.deleteRecipe(id);
     }
 

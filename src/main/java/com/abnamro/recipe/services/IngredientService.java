@@ -48,4 +48,11 @@ public class IngredientService {
     public List<Ingredient> list() {
         return ingredientRepository.findAll();
     }
+
+    public void delete(int id) {
+        if (!ingredientRepository.existsById(id)) {
+            throw new NotFoundException(messageProvider.getMessage("ingredient.notFound"));
+        }
+        ingredientRepository.deleteById(id);
+    }
 }

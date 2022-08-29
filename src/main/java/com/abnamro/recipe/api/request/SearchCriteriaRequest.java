@@ -58,4 +58,20 @@ public class SearchCriteriaRequest {
     public String getDataOption() {
         return dataOption;
     }
+
+    public void setFilterKey(String filterKey) {
+        this.filterKey = filterKey;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public void setDataOption(String dataOption) {
+        this.dataOption = dataOption;
+    }
 }
