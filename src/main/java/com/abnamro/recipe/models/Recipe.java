@@ -14,7 +14,10 @@ import java.util.Set;
 @Entity
 @DynamicUpdate
 @Table(name = "recipes")
-public class Recipe extends BasicEntity {
+public class Recipe {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @NotBlank
     @Column
@@ -27,10 +30,8 @@ public class Recipe extends BasicEntity {
             inverseJoinColumns = @JoinColumn(name = "ingredient_id", referencedColumnName = "id"))
     @JsonIgnoreProperties("ingredientRecipes")
     private Set<Ingredient> recipeIngredients;
-
     @Column
     private String instructions;
-
     @Column
     private String type;
 
@@ -44,6 +45,7 @@ public class Recipe extends BasicEntity {
 
     @Column
     private int numberOfServings;
+
 
     public String getName() {
         return name;
@@ -101,23 +103,8 @@ public class Recipe extends BasicEntity {
         this.numberOfServings = numberOfServings;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Recipe recipe = (Recipe) o;
-
-        if (!Objects.equals(name, recipe.name)) return false;
-        if (!Objects.equals(createdAt, recipe.createdAt)) return false;
-        return Objects.equals(updatedAt, recipe.updatedAt);
+    public Integer getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
-        result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
-        return result;
-    }
 }

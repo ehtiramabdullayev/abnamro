@@ -28,7 +28,7 @@ public class IngredientService {
     public Integer create(CreateIngredientRequest request) {
         Ingredient ingredient = new Ingredient();
 
-        ingredient.setIngredientName(request.getName());
+        ingredient.setIngredient(request.getName());
 
         Ingredient createdIngredient = ingredientRepository.save(ingredient);
         return createdIngredient.getId();

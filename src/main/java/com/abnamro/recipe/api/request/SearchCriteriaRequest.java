@@ -29,6 +29,7 @@ public class SearchCriteriaRequest {
             "ne- not equals", example = "cn")
     @EnumValidator(enumClass = SearchOperationReqInput.class, message = "{searchOperation.invalid}")
     private String operation;
+
     @ApiModelProperty(hidden = true)
     private String dataOption;
 

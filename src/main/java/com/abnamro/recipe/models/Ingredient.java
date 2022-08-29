@@ -8,16 +8,19 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @DynamicUpdate
 @Table(name = "ingredients")
-public class Ingredient extends BasicEntity {
+public class Ingredient {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     @NotBlank
     @Column
-    private String ingredientName;
+    private String ingredient;
 
     @ManyToMany(mappedBy = "recipeIngredients", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonIgnoreProperties("recipeIngredients")
@@ -31,12 +34,12 @@ public class Ingredient extends BasicEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public String getIngredientName() {
-        return ingredientName;
+    public String getIngredient() {
+        return ingredient;
     }
 
-    public void setIngredientName(String ingredientName) {
-        this.ingredientName = ingredientName;
+    public void setIngredient(String ingredient) {
+        this.ingredient = ingredient;
     }
 
     public Set<Recipe> getRecipeIngredients() {
@@ -59,19 +62,9 @@ public class Ingredient extends BasicEntity {
         this.updatedAt = updatedAt;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Ingredient that = (Ingredient) o;
-        return Objects.equals(ingredientName, that.ingredientName) &&
-                Objects.equals(recipeIngredients, that.recipeIngredients) &&
-                Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(updatedAt, that.updatedAt);
+    public Integer getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(ingredientName, recipeIngredients, createdAt, updatedAt);
-    }
+
 }

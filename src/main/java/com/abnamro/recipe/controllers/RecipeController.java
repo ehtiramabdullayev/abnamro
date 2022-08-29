@@ -22,6 +22,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Api(value = "RecipeController", tags = "Recipe Controller", description = "Create, update, delete, list recipes")
@@ -99,6 +100,8 @@ public class RecipeController {
     @ApiOperation(value = "Search recipes by given parameters")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful request"),
+            @ApiResponse(code = 404, message = "Different error messages related to criteria and recipe")
+
     })
     @RequestMapping(method = RequestMethod.POST, path = "/search")
     public List<RecipeResponse> searchRecipe(@RequestParam(name = "pageNum", defaultValue = "0") int pageNum,
@@ -111,12 +114,13 @@ public class RecipeController {
         Pageable page = PageRequest.of(pageNum, pageSize, Sort.by("name")
                 .ascending());
 
-        Page<Recipe> filteredRecipes = recipeService.findBySearchCriteria(recipeSearchRequest,builder, page);
+        Page<Recipe> filteredRecipes = recipeService.findBySearchCriteria(recipeSearchRequest, builder, page);
+        if (Optional.ofNullable(filteredRecipes).isPresent()) {
+            return filteredRecipes.toList().stream()
+                    .map(RecipeResponse::new)
+                    .collect(Collectors.toList());
 
-        return filteredRecipes.toList().stream()
-                .map(RecipeResponse::new)
-                .collect(Collectors.toList());
-
-
+        }
+        return List.of();
     }
 }
