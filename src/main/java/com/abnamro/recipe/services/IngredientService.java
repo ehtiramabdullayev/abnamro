@@ -24,7 +24,6 @@ public class IngredientService {
         this.messageProvider = messageProvider;
     }
 
-
     public Integer create(CreateIngredientRequest request) {
         Ingredient ingredient = new Ingredient();
 
@@ -40,6 +39,7 @@ public class IngredientService {
                 .map(this::findById)
                 .collect(Collectors.toSet());
     }
+
     public Ingredient findById(int id) {
         return ingredientRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(messageProvider.getMessage("ingredient.notFound")));

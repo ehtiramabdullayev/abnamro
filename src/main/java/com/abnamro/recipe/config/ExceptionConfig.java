@@ -3,7 +3,6 @@ package com.abnamro.recipe.config;
 import com.abnamro.recipe.api.response.GenericResponse;
 import com.abnamro.recipe.exceptions.ICustomException;
 import com.abnamro.recipe.exceptions.NotFoundException;
-import com.abnamro.recipe.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,13 +29,6 @@ public class ExceptionConfig {
     @Autowired
     public ExceptionConfig(MessageProvider messageProvider) {
         this.messageProvider = messageProvider;
-    }
-
-    @ExceptionHandler(ValidationException.class)
-    @ResponseBody
-    public ResponseEntity<GenericResponse> handleValidationException(ValidationException ex) {
-        HttpStatus status = ex.getStatus() == null ? HttpStatus.BAD_REQUEST : ex.getStatus();
-        return buildResponse(ex.getMessage(), status);
     }
 
     @ExceptionHandler(NotFoundException.class)

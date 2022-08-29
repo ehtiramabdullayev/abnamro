@@ -1,7 +1,6 @@
 package com.abnamro.recipe.api.response;
 
 import com.abnamro.recipe.models.Recipe;
-import com.abnamro.recipe.models.RecipeType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
