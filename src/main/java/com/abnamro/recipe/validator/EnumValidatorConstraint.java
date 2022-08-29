@@ -2,25 +2,29 @@ package com.abnamro.recipe.validator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class EnumValidatorConstraint implements ConstraintValidator<EnumValidator, CharSequence> {
+public class EnumValidatorConstraint implements ConstraintValidator<EnumValidator, String> {
     private List<String> acceptedValues;
 
     @Override
-    public void initialize(EnumValidator annotation) {
-        acceptedValues = Stream.of(annotation.enumClass().getEnumConstants())
-                .map(Enum::name)
-                .collect(Collectors.toList());
+    public void initialize(EnumValidator constraintAnnotation) {
+        acceptedValues = new ArrayList<>();
+        Class<? extends Enum<?>> enumClass = constraintAnnotation.enumClass();
+
+        Enum[] enumValArr = enumClass.getEnumConstants();
+
+        for (Enum enumVal : enumValArr) {
+            acceptedValues.add(enumVal.toString().toUpperCase());
+        }
     }
 
     @Override
-    public boolean isValid(CharSequence value, ConstraintValidatorContext context) {
+    public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {
             return true;
         }
-        return acceptedValues.contains(value.toString());
+        return acceptedValues.contains(value.toUpperCase());
     }
 }

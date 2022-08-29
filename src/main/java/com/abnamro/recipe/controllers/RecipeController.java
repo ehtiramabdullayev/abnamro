@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -105,10 +104,10 @@ public class RecipeController {
     public List<RecipeResponse> searchRecipe(@RequestParam(name = "pageNum", defaultValue = "0") int pageNum,
                                              @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
                                              @ApiParam(value = "Properties of the the search")
-                                             @RequestBody RecipeSearchRequest recipeSearchRequest) {
+                                             @RequestBody @Valid RecipeSearchRequest recipeSearchRequest) {
 
-        List<SearchCriteria> searchCriteria = new ArrayList<>();
-        RecipeSpecificationBuilder builder = new RecipeSpecificationBuilder(searchCriteria);
+        List<SearchCriteria> searchCriterionRequests = new ArrayList<>();
+        RecipeSpecificationBuilder builder = new RecipeSpecificationBuilder(searchCriterionRequests);
         Pageable page = PageRequest.of(pageNum, pageSize, Sort.by("name")
                 .ascending());
 

@@ -7,44 +7,44 @@ import javax.persistence.criteria.*;
 import java.util.Objects;
 
 public class RecipeSpecification implements Specification<Recipe> {
+    private final SearchCriteria criteria;
 
-    private final SearchCriteria searchCriteria;
-
-    public RecipeSpecification(SearchCriteria searchCriteria) {
+    public RecipeSpecification(SearchCriteria criteria) {
         super();
-        this.searchCriteria = searchCriteria;
+        this.criteria = criteria;
     }
 
     @Override
     public Predicate toPredicate(Root<Recipe> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        String strToSearch = searchCriteria.getValue().toString().toLowerCase();
-        String filterKey = searchCriteria.getFilterKey();
+        String strToSearch = criteria.getValue().toString().toLowerCase();
+        String filterKey = criteria.getFilterKey().toLowerCase();
+
         Join<Object, Object> subRoot = root.join("recipeIngredients", JoinType.INNER);
         query.distinct(true);
 
-        switch (Objects.requireNonNull(SearchOperation.getSimpleOperation(searchCriteria.getOperation()))) {
+        switch (Objects.requireNonNull(SearchOperation.getSimpleOperation(criteria.getOperation()))) {
             case CONTAINS:
-                if (filterKey.equals("ingredientName")) {
+                if (filterKey.equals("ingredientname")) {
                     return cb.like(cb.lower(subRoot.get(filterKey).as(String.class)), "%" + strToSearch + "%");
                 }
                 return cb.like(cb.lower(root.get(filterKey).as(String.class)), "%" + strToSearch + "%");
 
             case DOES_NOT_CONTAIN:
-                if (filterKey.equals("ingredientName")) {
+                if (filterKey.equals("ingredientname")) {
                     return cb.notLike(cb.lower(subRoot.get(filterKey).as(String.class)), "%" + strToSearch + "%");
                 }
                 return cb.notLike(cb.lower(root.get(filterKey).as(String.class)), "%" + strToSearch + "%");
             case EQUAL:
-                if (searchCriteria.getFilterKey().equals("ingredientName")) {
-                    return cb.equal(subRoot.get(searchCriteria.getFilterKey()).as(String.class), searchCriteria.getValue());
+                if (filterKey.equals("ingredientname")) {
+                    return cb.equal(subRoot.get(criteria.getFilterKey()).as(String.class), criteria.getValue());
                 }
-                return cb.equal(root.get(searchCriteria.getFilterKey()).as(String.class), searchCriteria.getValue());
+                return cb.equal(root.get(criteria.getFilterKey()).as(String.class), criteria.getValue());
 
             case NOT_EQUAL:
-                if (searchCriteria.getFilterKey().equals("ingredientName")) {
-                    return cb.notEqual(subRoot.get(searchCriteria.getFilterKey()).as(String.class), searchCriteria.getValue());
+                if (filterKey.equals("ingredientname")) {
+                    return cb.notEqual(subRoot.get(criteria.getFilterKey()).as(String.class), criteria.getValue());
                 }
-                return cb.notEqual(root.get(searchCriteria.getFilterKey()).as(String.class), searchCriteria.getValue());
+                return cb.notEqual(root.get(criteria.getFilterKey()).as(String.class), criteria.getValue());
         }
 
 

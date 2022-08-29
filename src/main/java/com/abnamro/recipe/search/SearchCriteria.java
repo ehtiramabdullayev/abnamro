@@ -1,7 +1,12 @@
 package com.abnamro.recipe.search;
 
-public class SearchCriteria {
+import com.abnamro.recipe.api.request.SearchCriteriaRequest;
+import com.abnamro.recipe.api.response.IngredientResponse;
+import com.abnamro.recipe.models.Recipe;
 
+import java.util.stream.Collectors;
+
+public class SearchCriteria {
 
     private String filterKey;
     private Object value;
@@ -17,6 +22,14 @@ public class SearchCriteria {
         this.operation = operation;
         this.value = value;
     }
+
+    public SearchCriteria(SearchCriteriaRequest request) {
+        this.dataOption = request.getDataOption();
+        this.filterKey = request.getFilterKey();
+        this.operation = request.getOperation();
+        this.value = request.getValue();
+    }
+
 
     public String getFilterKey() {
         return filterKey;

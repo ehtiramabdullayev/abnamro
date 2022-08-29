@@ -2,6 +2,7 @@ package com.abnamro.recipe.services;
 
 import com.abnamro.recipe.api.request.CreateRecipeRequest;
 import com.abnamro.recipe.api.request.RecipeSearchRequest;
+import com.abnamro.recipe.api.request.SearchCriteriaRequest;
 import com.abnamro.recipe.api.request.UpdateRecipeRequest;
 import com.abnamro.recipe.config.MessageProvider;
 import com.abnamro.recipe.exceptions.NotFoundException;
@@ -20,8 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import static java.util.Objects.isNull;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -94,16 +94,25 @@ public class RecipeService {
         recipeRepository.deleteById(id);
     }
 
-    public Page<Recipe> findBySearchCriteria(RecipeSearchRequest recipeSearchRequest, RecipeSpecificationBuilder builder, Pageable page){
-        List<SearchCriteria> criteriaList = recipeSearchRequest.getSearchCriteriaList();
-        if (!isNull(criteriaList)) {
-            criteriaList.forEach(criteria -> {
-                criteria.setDataOption(recipeSearchRequest.getDataOption());
-                builder.with(criteria);
-            });
-        }
+    public Page<Recipe> findBySearchCriteria(RecipeSearchRequest recipeSearchRequest, RecipeSpecificationBuilder builder, Pageable page) {
+        List<SearchCriteriaRequest> requestList = recipeSearchRequest.getSearchCriteriaRequests();
 
-        Specification<Recipe> recipeSpecification = builder.build().orElseThrow(() -> new NotFoundException(messageProvider.getMessage("criteria.notFound")));
-        return recipeRepository.findAll(recipeSpecification, page);
+        if (Optional.ofNullable(requestList).isPresent()) {
+            List<SearchCriteria> searchCriteria = requestList.stream()
+                    .map(SearchCriteria::new)
+                    .collect(Collectors.toList());
+
+
+            if (!searchCriteria.isEmpty()) {
+                searchCriteria.forEach(criteria -> {
+                    criteria.setDataOption(recipeSearchRequest.getDataOption());
+                    builder.with(criteria);
+                });
+            }
+
+            Specification<Recipe> recipeSpecification = builder.build().orElseThrow(() -> new NotFoundException(messageProvider.getMessage("criteria.notFound")));
+            return recipeRepository.findAll(recipeSpecification, page);
+        }
+        throw new NotFoundException(messageProvider.getMessage("criteria.notFound"));
     }
 }

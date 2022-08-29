@@ -9,12 +9,12 @@ import java.util.Optional;
 public class RecipeSpecificationBuilder {
     private final List<SearchCriteria> params;
 
-    public RecipeSpecificationBuilder(List<SearchCriteria> searchCriteria) {
-        this.params = searchCriteria;
+    public RecipeSpecificationBuilder(List<SearchCriteria> searchCriterionRequests) {
+        this.params = searchCriterionRequests;
     }
 
-    public final RecipeSpecificationBuilder with(SearchCriteria searchCriteria){
-        params.add(searchCriteria);
+    public final RecipeSpecificationBuilder with(SearchCriteria searchCriteriaRequest){
+        params.add(searchCriteriaRequest);
         return this;
     }
 
@@ -26,7 +26,7 @@ public class RecipeSpecificationBuilder {
         Specification<Recipe> result = new RecipeSpecification(params.get(0));
         for (int idx = 1; idx < params.size(); idx++){
             SearchCriteria criteria = params.get(idx);
-            result = SearchOperation.getDataOption(criteria.getDataOption()) == SearchOperation.ALL
+            result = DataOption.getDataOption(criteria.getDataOption()) == DataOption.ALL
                     ? Specification.where(result).and(new RecipeSpecification(criteria))
                     : Specification.where(result).or(new RecipeSpecification(criteria));
         }

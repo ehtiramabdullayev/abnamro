@@ -2,23 +2,12 @@ package com.abnamro.recipe.search;
 
 public enum SearchOperation {
 
-    CONTAINS, DOES_NOT_CONTAIN, EQUAL, NOT_EQUAL,
-    ANY, ALL;
+    CONTAINS, DOES_NOT_CONTAIN, EQUAL, NOT_EQUAL;
 
-
-    public static SearchOperation getDataOption(final String dataOption) {
-        switch (dataOption) {
-            case "all":
-                return ALL;
-            case "any":
-                return ANY;
-            default:
-                return null;
-        }
-    }
 
     public static SearchOperation getSimpleOperation(final String input) {
-        switch (input) {
+        String lowerInput = input.toLowerCase();
+        switch (lowerInput) {
             case "cn":
                 return CONTAINS;
             case "nc":
