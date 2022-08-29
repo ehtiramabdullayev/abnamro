@@ -65,8 +65,14 @@ public class IngredientController {
         return new CreateEntityResponse(id);
     }
 
+    @ApiOperation(value = "Delete the ingredient")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful operation"),
+            @ApiResponse(code = 400, message = "Invalid input"),
+            @ApiResponse(code = 404, message = "Ingredient not found by the given ID")
+    })
     @RequestMapping(method = RequestMethod.DELETE)
-    public void deleteIngredient(@NotNull @RequestParam(name = "id") Integer id) {
+    public void deleteIngredient(@ApiParam(value = "ingredient ID", required = true) @NotNull(message = "{id.notNull}") @RequestParam(name = "id")  Integer id) {
         ingredientService.delete(id);
     }
 }

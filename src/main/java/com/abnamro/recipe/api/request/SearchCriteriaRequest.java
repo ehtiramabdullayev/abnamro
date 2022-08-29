@@ -36,11 +36,10 @@ public class SearchCriteriaRequest {
     public SearchCriteriaRequest() {
     }
 
-    public SearchCriteriaRequest(String filterKey, Object value, String operation, String dataOption) {
+    public SearchCriteriaRequest(String filterKey, Object value, String operation) {
         this.filterKey = filterKey;
         this.value = value;
         this.operation = operation;
-        this.dataOption = dataOption;
     }
 
     public String getFilterKey() {

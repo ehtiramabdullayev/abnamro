@@ -38,4 +38,8 @@ public class RecipeSearchRequest {
     public void setDataOption(String dataOption) {
         this.dataOption = dataOption;
     }
+
+    public void setSearchCriteriaRequests(List<SearchCriteriaRequest> searchCriteriaRequests) {
+        this.searchCriteriaRequests = searchCriteriaRequests;
+    }
 }

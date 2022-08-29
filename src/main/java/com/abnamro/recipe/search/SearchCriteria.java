@@ -1,10 +1,6 @@
 package com.abnamro.recipe.search;
 
 import com.abnamro.recipe.api.request.SearchCriteriaRequest;
-import com.abnamro.recipe.api.response.IngredientResponse;
-import com.abnamro.recipe.models.Recipe;
-
-import java.util.stream.Collectors;
 
 public class SearchCriteria {
 
