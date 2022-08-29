@@ -17,7 +17,7 @@ import java.util.Set;
 public class Ingredient extends BasicEntity {
     @NotBlank
     @Column
-    private String name;
+    private String ingredientName;
 
     @ManyToMany(mappedBy = "recipeIngredients", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonIgnoreProperties("recipeIngredients")
@@ -31,12 +31,12 @@ public class Ingredient extends BasicEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public String getName() {
-        return name;
+    public String getIngredientName() {
+        return ingredientName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setIngredientName(String ingredientName) {
+        this.ingredientName = ingredientName;
     }
 
     public Set<Recipe> getRecipeIngredients() {
@@ -64,7 +64,7 @@ public class Ingredient extends BasicEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ingredient that = (Ingredient) o;
-        return Objects.equals(name, that.name) &&
+        return Objects.equals(ingredientName, that.ingredientName) &&
                 Objects.equals(recipeIngredients, that.recipeIngredients) &&
                 Objects.equals(createdAt, that.createdAt) &&
                 Objects.equals(updatedAt, that.updatedAt);
@@ -72,6 +72,6 @@ public class Ingredient extends BasicEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, recipeIngredients, createdAt, updatedAt);
+        return Objects.hash(ingredientName, recipeIngredients, createdAt, updatedAt);
     }
 }

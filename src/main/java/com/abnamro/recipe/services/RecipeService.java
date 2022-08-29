@@ -8,6 +8,9 @@ import com.abnamro.recipe.models.Ingredient;
 import com.abnamro.recipe.models.Recipe;
 import com.abnamro.recipe.repositories.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,5 +87,10 @@ public class RecipeService {
         }
 
         recipeRepository.deleteById(id);
+    }
+
+    public Page<Recipe> findBySearchCriteria(Specification<Recipe> spec, Pageable page){
+        Page<Recipe> searchResult = recipeRepository.findAll(spec, page);
+        return searchResult;
     }
 }

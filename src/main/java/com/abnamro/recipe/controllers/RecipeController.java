@@ -1,14 +1,22 @@
 package com.abnamro.recipe.controllers;
 
 import com.abnamro.recipe.api.request.CreateRecipeRequest;
+import com.abnamro.recipe.api.request.RecipeSearchRequest;
 import com.abnamro.recipe.api.request.UpdateRecipeRequest;
 import com.abnamro.recipe.api.response.CreateEntityResponse;
 import com.abnamro.recipe.api.response.RecipeResponse;
 import com.abnamro.recipe.models.Recipe;
+import com.abnamro.recipe.search.RecipeSpecificationBuilder;
+import com.abnamro.recipe.search.SearchCriteria;
 import com.abnamro.recipe.services.RecipeService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Api(value = "RecipeController", tags = "Recipe Controller", description = "Create, update, delete, list recipes")
 @RestController
-@RequestMapping(value = "/recipe")
+@RequestMapping(value = "api/v1/recipe")
 public class RecipeController {
 
     private final RecipeService recipeService;
@@ -86,5 +94,39 @@ public class RecipeController {
     public void deleteRecipe(
             @ApiParam(value = "Recipe ID", required = true) @NotNull(message = "{id.notNull}") @RequestParam(name = "id") Integer id) {
         recipeService.deleteRecipe(id);
+    }
+
+    @ApiOperation(value = "Search recipes by given parameters")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request"),
+    })
+    @RequestMapping(method = RequestMethod.POST, path = "/search")
+    public List<RecipeResponse> searchRecipe(@RequestParam(name = "pageNum", defaultValue = "0") int pageNum,
+                                             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
+                                             @ApiParam(value = "Properties of the recipe", required = false)
+                                             @RequestBody(required = false) RecipeSearchRequest recipeSearchRequest) {
+
+
+        RecipeSpecificationBuilder builder = new RecipeSpecificationBuilder();
+        List<SearchCriteria> criteriaList = recipeSearchRequest.getSearchCriteriaList();
+        if (criteriaList != null) {
+            criteriaList.forEach(x -> {
+                x.setDataOption(recipeSearchRequest.getDataOption());
+                builder.with(x);
+            });
+
+        }
+        Pageable page = PageRequest.of(pageNum, pageSize, Sort.by("name")
+                .ascending());
+
+
+        Page<Recipe> bySearchCriteria = recipeService.findBySearchCriteria(builder.build(), page);
+
+
+        return bySearchCriteria.toList().stream()
+                .map(RecipeResponse::new)
+                .collect(Collectors.toList());
+
+
     }
 }

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Api(value = "IngredientController", tags = "Ingredient Controller", description = "Create, update, delete, list ingredients")
 @RestController
-@RequestMapping(value = "/ingredient")
+@RequestMapping(value = "api/v1/ingredient")
 public class IngredientController {
     private final IngredientService ingredientService;
 

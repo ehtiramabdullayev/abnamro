@@ -48,7 +48,6 @@ public class Recipe extends BasicEntity {
     @Column
     private int numberOfServings;
 
-
     public String getName() {
         return name;
     }

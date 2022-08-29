@@ -27,7 +27,7 @@ public class IngredientResponse {
 
     public IngredientResponse(Ingredient ingredient) {
         this.id = ingredient.getId();
-        this.name = ingredient.getName();
+        this.name = ingredient.getIngredientName();
         this.createdAt = ingredient.getCreatedAt();
         this.updatedAt = ingredient.getUpdatedAt();
     }
