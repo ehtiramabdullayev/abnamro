@@ -116,7 +116,7 @@ public class RecipeController {
                                              @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
                                              @ApiParam(value = "Properties of the the search")
                                              @RequestBody @Valid RecipeSearchRequest recipeSearchRequest) {
-
+        logger.info("Searching the recipe by given criteria");
         List<SearchCriteria> searchCriterionRequests = new ArrayList<>();
         RecipeSpecificationBuilder builder = new RecipeSpecificationBuilder(searchCriterionRequests);
         Pageable page = PageRequest.of(pageNum, pageSize, Sort.by("name")

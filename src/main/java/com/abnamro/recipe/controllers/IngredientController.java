@@ -6,6 +6,8 @@ import com.abnamro.recipe.api.response.IngredientResponse;
 import com.abnamro.recipe.models.Ingredient;
 import com.abnamro.recipe.services.IngredientService;
 import io.swagger.annotations.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "api/v1/ingredient")
 public class IngredientController {
+
+    private final Logger logger = LoggerFactory.getLogger(IngredientController.class);
+
     private final IngredientService ingredientService;
 
     @Autowired
@@ -32,6 +37,7 @@ public class IngredientController {
     })
     @RequestMapping(method = RequestMethod.GET)
     public List<IngredientResponse> getIngredientList() {
+        logger.info("Getting the ingredients");
         List<Ingredient> list = ingredientService.list();
 
         return list
@@ -47,6 +53,7 @@ public class IngredientController {
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public IngredientResponse getIngredient(@ApiParam(value = "Ingredient ID", required = true) @PathVariable(name = "id") Integer id) {
+        logger.info("Getting the ingredient by its id. Id: {}", id);
         Ingredient ingredient = ingredientService.findById(id);
         return new IngredientResponse(ingredient);
     }
@@ -60,6 +67,7 @@ public class IngredientController {
     @ResponseStatus(HttpStatus.CREATED)
     public CreateEntityResponse createIngredient(
             @ApiParam(value = "Properties of the Ingredient", required = true) @Valid @RequestBody CreateIngredientRequest request) {
+        logger.info("Creating the ingredient with properties");
         Integer id = ingredientService.create(request);
         return new CreateEntityResponse(id);
     }
@@ -72,6 +80,7 @@ public class IngredientController {
     })
     @RequestMapping(method = RequestMethod.DELETE)
     public void deleteIngredient(@ApiParam(value = "ingredient ID", required = true) @NotNull(message = "{id.notNull}") @RequestParam(name = "id")  Integer id) {
+        logger.info("Deleting the ingredient by its id. Id: {}", id);
         ingredientService.delete(id);
     }
 }
