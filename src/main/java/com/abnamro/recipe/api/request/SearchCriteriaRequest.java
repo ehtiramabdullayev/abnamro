@@ -26,7 +26,7 @@ public class SearchCriteriaRequest {
     @ApiModelProperty(notes = "The operation type you wanted to search (cn - contains, " +
             "nc - doesn't contain, " +
             "eq - equals, " +
-            "ne- not equals", example = "cn")
+            "ne - not equals", example = "cn")
     @EnumValidator(enumClass = SearchOperationReqInput.class, message = "{searchOperation.invalid}")
     private String operation;
 
