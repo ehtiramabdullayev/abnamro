@@ -94,7 +94,9 @@ public class RecipeService {
         recipeRepository.deleteById(id);
     }
 
-    public Page<Recipe> findBySearchCriteria(RecipeSearchRequest recipeSearchRequest, RecipeSpecificationBuilder builder, Pageable page) {
+    public Page<Recipe> findBySearchCriteria(RecipeSearchRequest recipeSearchRequest,
+                                             RecipeSpecificationBuilder builder,
+                                             Pageable page) {
         List<SearchCriteriaRequest> requestList = recipeSearchRequest.getSearchCriteriaRequests();
 
         if (Optional.ofNullable(requestList).isPresent()) {

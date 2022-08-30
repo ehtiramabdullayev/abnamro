@@ -24,8 +24,9 @@ public class RecipeSpecificationBuilder {
         }
 
         Specification<Recipe> result = new RecipeSpecification(params.get(0));
-        for (int idx = 1; idx < params.size(); idx++){
-            SearchCriteria criteria = params.get(idx);
+
+        for (int i = 1; i < params.size(); i++){
+            SearchCriteria criteria = params.get(i);
             result = DataOption.getDataOption(criteria.getDataOption()) == DataOption.ALL
                     ? Specification.where(result).and(new RecipeSpecification(criteria))
                     : Specification.where(result).or(new RecipeSpecification(criteria));
