@@ -27,11 +27,15 @@ public class IngredientTestDataBuilder {
         Ingredient i1 = new IngredientModelBuilder()
                 .withId(withId ? 10 : null)
                 .withName("tomato")
+                .withCreatedAt(LocalDateTime.now())
+                .withUpdatedAt(LocalDateTime.now())
                 .build();
 
         Ingredient i2 = new IngredientModelBuilder()
                 .withId(withId ? 11 : null)
                 .withName("cabbage")
+                .withCreatedAt(LocalDateTime.now())
+                .withUpdatedAt(LocalDateTime.now())
                 .build();
 
         return List.of(i1, i2);

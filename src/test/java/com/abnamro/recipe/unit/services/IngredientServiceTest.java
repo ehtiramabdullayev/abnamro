@@ -1,6 +1,7 @@
 package com.abnamro.recipe.unit.services;
 
 import com.abnamro.recipe.api.request.CreateIngredientRequest;
+import com.abnamro.recipe.config.MessageProvider;
 import com.abnamro.recipe.exceptions.NotFoundException;
 import com.abnamro.recipe.models.Ingredient;
 import com.abnamro.recipe.repositories.IngredientRepository;
@@ -23,6 +24,9 @@ import static org.mockito.Mockito.when;
 public class IngredientServiceTest {
     @Mock
     private IngredientRepository ingredientRepository;
+
+    @Mock
+    private MessageProvider messageProvider;
 
     @InjectMocks
     private IngredientService ingredientService;

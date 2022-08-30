@@ -20,7 +20,6 @@ public class SearchOperationTest {
 
     @Test
     public void whenInputEnterItReturnsCorrespondingEnum() {
-
         SearchOperation cn = SearchOperation.getSimpleOperation("cn");
         SearchOperation nc = SearchOperation.getSimpleOperation("nc");
         SearchOperation eq = SearchOperation.getSimpleOperation("eq");

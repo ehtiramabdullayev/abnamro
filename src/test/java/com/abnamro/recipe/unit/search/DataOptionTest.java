@@ -17,7 +17,6 @@ public class DataOptionTest {
 
     @Test
     public void whenInputEnterItReturnsCorrespondingEnum() {
-
         DataOption all = DataOption.getDataOption("all");
         DataOption any = DataOption.getDataOption("any");
         assertEquals(DataOption.ALL, all);

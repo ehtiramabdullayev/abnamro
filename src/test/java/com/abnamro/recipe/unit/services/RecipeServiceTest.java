@@ -1,11 +1,13 @@
 package com.abnamro.recipe.unit.services;
 
 import com.abnamro.recipe.api.request.CreateRecipeRequest;
+import com.abnamro.recipe.api.request.RecipeSearchRequest;
 import com.abnamro.recipe.api.request.UpdateRecipeRequest;
 import com.abnamro.recipe.config.MessageProvider;
 import com.abnamro.recipe.exceptions.NotFoundException;
 import com.abnamro.recipe.models.Recipe;
 import com.abnamro.recipe.repositories.RecipeRepository;
+import com.abnamro.recipe.search.RecipeSpecificationBuilder;
 import com.abnamro.recipe.services.IngredientService;
 import com.abnamro.recipe.services.RecipeService;
 import org.junit.Test;
@@ -13,14 +15,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -93,4 +95,13 @@ public class RecipeServiceTest {
 
         recipeService.deleteRecipe(1);
     }
+
+    @Test(expected = NotFoundException.class)
+    public void test_findBySearchCriteria_notFound() {
+        RecipeSearchRequest recipeSearchRequest = mock(RecipeSearchRequest.class);
+        RecipeSpecificationBuilder builder = mock(RecipeSpecificationBuilder.class);
+        Pageable pageable = mock(Pageable.class);
+        recipeService.findBySearchCriteria(recipeSearchRequest, builder, pageable);
+    }
+
 }
