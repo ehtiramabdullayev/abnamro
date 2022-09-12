@@ -43,7 +43,7 @@ public class RecipeRepositoryTest {
 
         Recipe entity2 = new Recipe();
         entity2.setType("Other");
-        entity2.setName("pizzq");
+        entity2.setName("pizza");
 
 
         Recipe firstSavedEntity = recipeRepository.save(entity1);
