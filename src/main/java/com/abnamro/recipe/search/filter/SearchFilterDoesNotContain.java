@@ -8,8 +8,9 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import static com.abnamro.recipe.config.DatabaseAttributes.INGREDIENT_KEY;
+
 public class SearchFilterDoesNotContain implements SearchFilter {
-    private static final String INGREDIENT_KEY = "ingredient";
 
     @Override
     public boolean couldBeApplied(SearchOperation opt) {

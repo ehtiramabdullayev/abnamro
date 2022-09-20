@@ -19,7 +19,7 @@ public class Ingredient {
     private Integer id;
 
     @NotBlank
-    @Column
+    @Column(nullable = false, unique = true)
     private String ingredient;
 
     @ManyToMany(mappedBy = "recipeIngredients", cascade = {CascadeType.MERGE, CascadeType.PERSIST})

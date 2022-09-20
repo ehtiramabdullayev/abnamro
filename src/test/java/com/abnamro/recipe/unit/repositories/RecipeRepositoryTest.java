@@ -40,7 +40,6 @@ public class RecipeRepositoryTest {
         entity1.setType("Other");
         entity1.setName("lasagna");
 
-
         Recipe entity2 = new Recipe();
         entity2.setType("Other");
         entity2.setName("pizza");
