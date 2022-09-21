@@ -35,10 +35,11 @@ public class IngredientController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful request"),
     })
-    @RequestMapping(method = RequestMethod.GET)
-    public List<IngredientResponse> getIngredientList() {
+    @RequestMapping(method = RequestMethod.GET, path = "/page/{page}/size/{size}")
+    public List<IngredientResponse> getIngredientList(@PathVariable(name = "page") int page,
+                                                      @PathVariable(name = "size") int size) {
         logger.info("Getting the ingredients");
-        List<Ingredient> list = ingredientService.list();
+        List<Ingredient> list = ingredientService.list(page, size);
 
         return list
                 .stream()
@@ -79,7 +80,7 @@ public class IngredientController {
             @ApiResponse(code = 404, message = "Ingredient not found by the given ID")
     })
     @RequestMapping(method = RequestMethod.DELETE)
-    public void deleteIngredient(@ApiParam(value = "ingredient ID", required = true) @NotNull(message = "{id.notNull}") @RequestParam(name = "id")  Integer id) {
+    public void deleteIngredient(@ApiParam(value = "ingredient ID", required = true) @NotNull(message = "{id.notNull}") @RequestParam(name = "id") Integer id) {
         logger.info("Deleting the ingredient by its id. Id: {}", id);
         ingredientService.delete(id);
     }

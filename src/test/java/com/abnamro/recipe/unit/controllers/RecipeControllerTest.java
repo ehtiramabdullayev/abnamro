@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class RecipeControllerTest {
 
     @Test
     public void test_createRecipe_successfully() {
-        CreateRecipeRequest request = new CreateRecipeRequest("pasta","OTHER",4,null,"instructions");
+        CreateRecipeRequest request = new CreateRecipeRequest("pasta", "OTHER", 4, null, "instructions");
 
         when(recipeService.createRecipe(any(CreateRecipeRequest.class))).thenReturn(1);
 
@@ -70,9 +71,9 @@ public class RecipeControllerTest {
         storedRecipeList.add(recipe);
         storedRecipeList.add(recipe1);
 
-        when(recipeService.getRecipeList()).thenReturn(storedRecipeList);
+        when(recipeService.getRecipeList(anyInt(), anyInt())).thenReturn(storedRecipeList);
 
-        List<RecipeResponse> recipeList = recipeController.getRecipeList();
+        List<RecipeResponse> recipeList = recipeController.getRecipeList(anyInt(), anyInt());
 
         assertThat(storedRecipeList.size()).isSameAs(recipeList.size());
         assertThat(storedRecipeList.get(0).getId()).isSameAs(recipeList.get(0).getId());
@@ -89,7 +90,7 @@ public class RecipeControllerTest {
         doNothing().when(recipeService).updateRecipe(any());
         recipe.setName("name2");
 
-        UpdateRecipeRequest request = new UpdateRecipeRequest(1,"pasta","OTHER",4,null,"instructions");
+        UpdateRecipeRequest request = new UpdateRecipeRequest(1, "pasta", "OTHER", 4, null, "instructions");
 
         recipeController.updateRecipe(request);
     }

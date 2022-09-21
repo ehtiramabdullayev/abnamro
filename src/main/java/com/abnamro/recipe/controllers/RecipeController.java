@@ -36,10 +36,11 @@ public class RecipeController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful request"),
     })
-    @RequestMapping(method = RequestMethod.GET)
-    public List<RecipeResponse> getRecipeList() {
+    @RequestMapping(method = RequestMethod.GET, path = "/page/{page}/size/{size}")
+    public List<RecipeResponse> getRecipeList(@PathVariable(name = "page") int page,
+                                              @PathVariable(name = "size") int size) {
         logger.info("Getting the recipes");
-        List<Recipe> list = recipeService.getRecipeList();
+        List<Recipe> list = recipeService.getRecipeList(page, size);
 
         return list.stream()
                 .map(RecipeResponse::new)
@@ -104,12 +105,12 @@ public class RecipeController {
 
     })
     @RequestMapping(method = RequestMethod.POST, path = "/search")
-    public List<RecipeResponse> searchRecipe(@RequestParam(name = "pageNum", defaultValue = "0") int pageNum,
-                                             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
+    public List<RecipeResponse> searchRecipe(@RequestParam(name = "page", defaultValue = "0") int page,
+                                             @RequestParam(name = "size", defaultValue = "10") int size,
                                              @ApiParam(value = "Properties of the the search")
                                              @RequestBody @Valid RecipeSearchRequest recipeSearchRequest) {
         logger.info("Searching the recipe by given criteria");
-        return recipeService.findBySearchCriteria(pageNum, pageSize, recipeSearchRequest);
+        return recipeService.findBySearchCriteria(recipeSearchRequest, page, size);
     }
 
 

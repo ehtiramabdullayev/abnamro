@@ -76,7 +76,7 @@ public class IngredientControllerIntegrationTest extends AbstractControllerInteg
         List<Ingredient> ingredientList = IngredientTestDataBuilder.createIngredientList();
         ingredientRepository.saveAll(ingredientList);
 
-        MvcResult result = performGet("/api/v1/ingredient")
+        MvcResult result = performGet("/api/v1/ingredient/page/0/size/10")
                 .andExpect(status().isOk())
                 .andReturn();
 

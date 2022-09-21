@@ -5,6 +5,8 @@ import com.abnamro.recipe.config.MessageProvider;
 import com.abnamro.recipe.exceptions.NotFoundException;
 import com.abnamro.recipe.models.Ingredient;
 import com.abnamro.recipe.repositories.IngredientRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,8 +47,10 @@ public class IngredientService {
                 .orElseThrow(() -> new NotFoundException(messageProvider.getMessage("ingredient.notFound")));
     }
 
-    public List<Ingredient> list() {
-        return ingredientRepository.findAll();
+    public List<Ingredient> list(int page, int size) {
+        Pageable pageRequest
+                = PageRequest.of(page, size);
+        return ingredientRepository.findAll(pageRequest).getContent();
     }
 
     public void delete(int id) {

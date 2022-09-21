@@ -57,9 +57,9 @@ public class IngredientControllerTest {
     public void test_listIngredients_successfully() {
         List<Ingredient> storedIngredientList = IngredientTestDataBuilder.createIngredientList(true);
 
-        when(ingredientService.list()).thenReturn(storedIngredientList);
+        when(ingredientService.list(anyInt(), anyInt())).thenReturn(storedIngredientList);
 
-        List<IngredientResponse> ingredientList = ingredientController.getIngredientList();
+        List<IngredientResponse> ingredientList = ingredientController.getIngredientList(anyInt(), anyInt());
 
         assertThat(storedIngredientList.size()).isSameAs(ingredientList.size());
         assertThat(storedIngredientList.get(0).getId()).isSameAs(ingredientList.get(0).getId());

@@ -61,8 +61,10 @@ public class RecipeService {
         return createdRecipe.getId();
     }
 
-    public List<Recipe> getRecipeList() {
-        return recipeRepository.findAll();
+    public List<Recipe> getRecipeList(int page, int size) {
+        Pageable pageRequest
+                = PageRequest.of(page, size);
+        return recipeRepository.findAll(pageRequest).getContent();
     }
 
     public Recipe getRecipeById(int id) {
@@ -127,13 +129,13 @@ public class RecipeService {
                 .orElseThrow(() -> new NotFoundException(messageProvider.getMessage("criteria.notFound")));
     }
 
-    public List<RecipeResponse> findBySearchCriteria(int pageNum, int pageSize, RecipeSearchRequest recipeSearchRequest) {
+    public List<RecipeResponse> findBySearchCriteria(RecipeSearchRequest recipeSearchRequest, int page, int size) {
         List<SearchCriteria> searchCriterionRequests = new ArrayList<>();
         RecipeSpecificationBuilder builder = new RecipeSpecificationBuilder(searchCriterionRequests);
-        Pageable page = PageRequest.of(pageNum, pageSize, Sort.by("name")
+        Pageable pageRequest = PageRequest.of(page, size, Sort.by("name")
                 .ascending());
 
-        Page<Recipe> filteredRecipes = prepareFilteredRecipes(recipeSearchRequest, builder, page);
+        Page<Recipe> filteredRecipes = prepareFilteredRecipes(recipeSearchRequest, builder, pageRequest);
         return filteredRecipes.toList().stream()
                 .map(RecipeResponse::new)
                 .collect(Collectors.toList());

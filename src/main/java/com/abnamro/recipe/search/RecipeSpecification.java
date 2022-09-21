@@ -13,7 +13,8 @@ import static com.abnamro.recipe.config.DatabaseAttributes.JOINED_TABLE_NAME;
 public class RecipeSpecification implements Specification<Recipe> {
     private final SearchCriteria criteria;
 
-    private List<SearchFilter> searchFilters;
+    // I made it static because this filters isn't object-specific and no need to populate it with every new specification
+    private static List<SearchFilter> searchFilters;
 
     public RecipeSpecification(SearchCriteria criteria) {
         super();
@@ -30,11 +31,9 @@ public class RecipeSpecification implements Specification<Recipe> {
         Join<Object, Object> subRoot = root.join(JOINED_TABLE_NAME, JoinType.INNER);
         query.distinct(true);
 
-        for (SearchFilter searchFilter : searchFilters) {
-            if (searchFilter.couldBeApplied(operation)) {
+        for (SearchFilter searchFilter : searchFilters)
+            if (searchFilter.couldBeApplied(operation))
                 return searchFilter.apply(cb, filterKey, filterValue, root, subRoot);
-            }
-        }
 
         return null;
     }

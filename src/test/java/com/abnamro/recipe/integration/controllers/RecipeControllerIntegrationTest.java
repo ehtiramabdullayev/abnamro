@@ -95,7 +95,7 @@ public class RecipeControllerIntegrationTest extends AbstractControllerIntegrati
 
         recipeRepository.saveAll(storedRecipeList);
 
-        MvcResult result = performGet("/api/v1/recipe")
+        MvcResult result = performGet("/api/v1/recipe/page/0/size/10")
                 .andExpect(status().isOk())
                 .andReturn();
 
