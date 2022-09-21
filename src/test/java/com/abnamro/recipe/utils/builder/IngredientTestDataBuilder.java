@@ -19,6 +19,13 @@ public class IngredientTestDataBuilder {
                 .build();
     }
 
+    public static Ingredient createIngredientWithNameParam(String name) {
+        return new IngredientModelBuilder()
+                .withName(name)
+                .build();
+    }
+
+
     public static List<Ingredient> createIngredientList() {
         return createIngredientList(false);
     }

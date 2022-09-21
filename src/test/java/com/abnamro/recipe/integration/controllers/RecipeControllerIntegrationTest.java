@@ -175,7 +175,7 @@ public class RecipeControllerIntegrationTest extends AbstractControllerIntegrati
     @Test
     public void test_SearchRecipeByCriteria_successfully() throws Exception {
         //create ingredient for recipe
-        Ingredient ingredient = IngredientTestDataBuilder.createIngredient();
+        Ingredient ingredient = IngredientTestDataBuilder.createIngredientWithNameParam("Pepper");
         Ingredient savedIngredient = ingredientRepository.save(ingredient);
 
         //create the recipe
