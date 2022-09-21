@@ -6,25 +6,17 @@ import com.abnamro.recipe.api.request.UpdateRecipeRequest;
 import com.abnamro.recipe.api.response.CreateEntityResponse;
 import com.abnamro.recipe.api.response.RecipeResponse;
 import com.abnamro.recipe.models.Recipe;
-import com.abnamro.recipe.search.RecipeSpecificationBuilder;
-import com.abnamro.recipe.search.SearchCriteria;
 import com.abnamro.recipe.services.RecipeService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Api(value = "RecipeController", tags = "Recipe Controller", description = "Create, update, delete, list recipes")
@@ -117,18 +109,8 @@ public class RecipeController {
                                              @ApiParam(value = "Properties of the the search")
                                              @RequestBody @Valid RecipeSearchRequest recipeSearchRequest) {
         logger.info("Searching the recipe by given criteria");
-        List<SearchCriteria> searchCriterionRequests = new ArrayList<>();
-        RecipeSpecificationBuilder builder = new RecipeSpecificationBuilder(searchCriterionRequests);
-        Pageable page = PageRequest.of(pageNum, pageSize, Sort.by("name")
-                .ascending());
-
-        Page<Recipe> filteredRecipes = recipeService.findBySearchCriteria(recipeSearchRequest, builder, page);
-        if (Optional.ofNullable(filteredRecipes).isPresent()) {
-            return filteredRecipes.toList().stream()
-                    .map(RecipeResponse::new)
-                    .collect(Collectors.toList());
-
-        }
-        return List.of();
+        return recipeService.findBySearchCriteria(pageNum, pageSize, recipeSearchRequest);
     }
+
+
 }

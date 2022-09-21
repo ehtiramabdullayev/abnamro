@@ -3,7 +3,6 @@ package com.abnamro.recipe.search;
 import com.abnamro.recipe.api.request.SearchCriteriaRequest;
 
 public class SearchCriteria {
-
     private String filterKey;
     private Object value;
     private String operation;

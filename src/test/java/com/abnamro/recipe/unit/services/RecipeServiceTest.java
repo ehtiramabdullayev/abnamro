@@ -101,7 +101,7 @@ public class RecipeServiceTest {
         RecipeSearchRequest recipeSearchRequest = mock(RecipeSearchRequest.class);
         RecipeSpecificationBuilder builder = mock(RecipeSpecificationBuilder.class);
         Pageable pageable = mock(Pageable.class);
-        recipeService.findBySearchCriteria(recipeSearchRequest, builder, pageable);
+        recipeService.findBySearchCriteria(0,10,recipeSearchRequest);
     }
 
 }

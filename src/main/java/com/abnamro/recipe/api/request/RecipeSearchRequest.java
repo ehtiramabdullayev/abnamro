@@ -30,7 +30,6 @@ public class RecipeSearchRequest {
         return searchCriteriaRequests;
     }
 
-
     public String getDataOption() {
         return dataOption;
     }
