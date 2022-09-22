@@ -20,10 +20,9 @@ public class SearchFilterContains implements SearchFilter {
 
     @Override
     public Predicate apply(CriteriaBuilder cb, String filterKey, String filterValue, Root<Recipe> root, Join<Object, Object> subRoot) {
-
-        if (filterKey.equals(INGREDIENT_KEY)) {
+        if (filterKey.equals(INGREDIENT_KEY))
             return cb.like(cb.lower(subRoot.get(filterKey).as(String.class)), "%" + filterValue + "%");
-        }
+
         return cb.like(cb.lower(root.get(filterKey).as(String.class)), "%" + filterValue + "%");
     }
 }

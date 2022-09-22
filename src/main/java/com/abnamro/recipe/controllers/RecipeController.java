@@ -112,6 +112,4 @@ public class RecipeController {
         logger.info("Searching the recipe by given criteria");
         return recipeService.findBySearchCriteria(recipeSearchRequest, page, size);
     }
-
-
 }

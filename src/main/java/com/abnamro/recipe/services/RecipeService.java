@@ -85,7 +85,7 @@ public class RecipeService {
         recipe.setNumberOfServings(updateRecipeRequest.getNumberOfServings());
         recipe.setInstructions(updateRecipeRequest.getInstructions());
 
-        if (ingredients != null) recipe.setRecipeIngredients(ingredients);
+        if (Optional.ofNullable(ingredients).isPresent()) recipe.setRecipeIngredients(ingredients);
 
         recipeRepository.save(recipe);
     }

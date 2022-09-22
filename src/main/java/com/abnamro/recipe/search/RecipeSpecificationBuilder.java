@@ -19,9 +19,7 @@ public class RecipeSpecificationBuilder {
     }
 
     public Optional<Specification<Recipe>> build(){
-        if(params.size() == 0){
-            return Optional.empty();
-        }
+        if(params.size() == 0) return Optional.empty();
 
         Specification<Recipe> result = new RecipeSpecification(params.get(0));
 

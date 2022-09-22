@@ -14,7 +14,7 @@ public class RecipeSpecification implements Specification<Recipe> {
     private final SearchCriteria criteria;
 
     // I made it static because this filters isn't object-specific and no need to populate it with every new specification
-    private static List<SearchFilter> searchFilters;
+    private static final List<SearchFilter> searchFilters = new ArrayList<>();
 
     public RecipeSpecification(SearchCriteria criteria) {
         super();
@@ -39,7 +39,6 @@ public class RecipeSpecification implements Specification<Recipe> {
     }
 
     private void filterList() {
-        searchFilters = new ArrayList<>();
         searchFilters.add(new SearchFilterEqual());
         searchFilters.add(new SearchFilterNotEqual());
         searchFilters.add(new SearchFilterContains());
