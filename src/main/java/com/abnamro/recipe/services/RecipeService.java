@@ -98,27 +98,30 @@ public class RecipeService {
         recipeRepository.deleteById(id);
     }
 
-    private Page<Recipe> prepareFilteredRecipes(RecipeSearchRequest recipeSearchRequest,
-                                                RecipeSpecificationBuilder builder,
-                                                Pageable page) {
-        List<SearchCriteriaRequest> criteriaList = recipeSearchRequest.getSearchCriteriaRequests();
+    public List<RecipeResponse> findBySearchCriteria(RecipeSearchRequest recipeSearchRequest, int page, int size) {
+        List<SearchCriteria> searchCriterionRequests = new ArrayList<>();
+        RecipeSpecificationBuilder builder = new RecipeSpecificationBuilder(searchCriterionRequests);
+        Pageable pageRequest = PageRequest.of(page, size, Sort.by("name")
+                .ascending());
 
-        if (Optional.ofNullable(criteriaList).isPresent()) {
-            Specification<Recipe> recipeSpecification = createRecipeSpecification(recipeSearchRequest, builder, criteriaList);
+        Specification<Recipe> recipeSpecification = createRecipeSpecification(recipeSearchRequest, builder);
+        Page<Recipe> filteredRecipes = recipeRepository.findAll(recipeSpecification, pageRequest);
 
-            return recipeRepository.findAll(recipeSpecification, page);
-        }
-        throw new NotFoundException(messageProvider.getMessage("criteria.notFound"));
+        return filteredRecipes.toList().stream()
+                .map(RecipeResponse::new)
+                .collect(Collectors.toList());
     }
 
-    private Specification<Recipe> createRecipeSpecification(RecipeSearchRequest recipeSearchRequest, RecipeSpecificationBuilder builder, List<SearchCriteriaRequest> requestList) {
-        List<SearchCriteria> criteriaList = requestList.stream()
-                .map(SearchCriteria::new)
-                .collect(Collectors.toList());
+    private Specification<Recipe> createRecipeSpecification(RecipeSearchRequest recipeSearchRequest,
+                                                            RecipeSpecificationBuilder builder) {
+        List<SearchCriteriaRequest> searchCriteriaRequests = recipeSearchRequest.getSearchCriteriaRequests();
 
+        if (Optional.ofNullable(searchCriteriaRequests).isPresent()) {
+            List<SearchCriteria> searchCriteriaList = searchCriteriaRequests.stream()
+                    .map(SearchCriteria::new)
+                    .collect(Collectors.toList());
 
-        if (!criteriaList.isEmpty()) {
-            criteriaList.forEach(criteria -> {
+            if (!searchCriteriaList.isEmpty()) searchCriteriaList.forEach(criteria -> {
                 criteria.setDataOption(recipeSearchRequest.getDataOption());
                 builder.with(criteria);
             });
@@ -127,18 +130,5 @@ public class RecipeService {
         return builder
                 .build()
                 .orElseThrow(() -> new NotFoundException(messageProvider.getMessage("criteria.notFound")));
-    }
-
-    public List<RecipeResponse> findBySearchCriteria(RecipeSearchRequest recipeSearchRequest, int page, int size) {
-        List<SearchCriteria> searchCriterionRequests = new ArrayList<>();
-        RecipeSpecificationBuilder builder = new RecipeSpecificationBuilder(searchCriterionRequests);
-        Pageable pageRequest = PageRequest.of(page, size, Sort.by("name")
-                .ascending());
-
-        Page<Recipe> filteredRecipes = prepareFilteredRecipes(recipeSearchRequest, builder, pageRequest);
-        return filteredRecipes.toList().stream()
-                .map(RecipeResponse::new)
-                .collect(Collectors.toList());
-
     }
 }

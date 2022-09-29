@@ -3,7 +3,10 @@ package com.abnamro.recipe.unit.search;
 import com.abnamro.recipe.search.SearchOperation;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SearchOperationTest {
     @Test
@@ -20,13 +23,17 @@ public class SearchOperationTest {
 
     @Test
     public void whenInputEnterItReturnsCorrespondingEnum() {
-        SearchOperation cn = SearchOperation.getSimpleOperation("cn");
-        SearchOperation nc = SearchOperation.getSimpleOperation("nc");
-        SearchOperation eq = SearchOperation.getSimpleOperation("eq");
-        SearchOperation ne = SearchOperation.getSimpleOperation("ne");
-        assertEquals(SearchOperation.CONTAINS, cn);
-        assertEquals(SearchOperation.DOES_NOT_CONTAIN, nc);
-        assertEquals(SearchOperation.EQUAL, eq);
-        assertEquals(SearchOperation.NOT_EQUAL, ne);
+        Optional<SearchOperation> cn = SearchOperation.getOperation("cn");
+        Optional<SearchOperation> nc = SearchOperation.getOperation("nc");
+        Optional<SearchOperation> eq = SearchOperation.getOperation("eq");
+        Optional<SearchOperation> ne = SearchOperation.getOperation("ne");
+        assertTrue(cn.isPresent());
+        assertTrue(nc.isPresent());
+        assertTrue(eq.isPresent());
+        assertTrue(ne.isPresent());
+        assertEquals(SearchOperation.CONTAINS, cn.get());
+        assertEquals(SearchOperation.DOES_NOT_CONTAIN, nc.get());
+        assertEquals(SearchOperation.EQUAL, eq.get());
+        assertEquals(SearchOperation.NOT_EQUAL, ne.get());
     }
 }

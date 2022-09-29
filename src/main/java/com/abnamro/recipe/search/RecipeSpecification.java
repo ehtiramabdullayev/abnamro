@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.abnamro.recipe.config.DatabaseAttributes.JOINED_TABLE_NAME;
 
@@ -24,18 +25,18 @@ public class RecipeSpecification implements Specification<Recipe> {
 
     @Override
     public Predicate toPredicate(Root<Recipe> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        SearchOperation operation = SearchOperation.getSimpleOperation(criteria.getOperation());
+        Optional<SearchOperation> operation = SearchOperation.getOperation(criteria.getOperation());
         String filterValue = criteria.getValue().toString().toLowerCase();
         String filterKey = criteria.getFilterKey();
 
         Join<Object, Object> subRoot = root.join(JOINED_TABLE_NAME, JoinType.INNER);
         query.distinct(true);
 
-        for (SearchFilter searchFilter : searchFilters)
-            if (searchFilter.couldBeApplied(operation))
-                return searchFilter.apply(cb, filterKey, filterValue, root, subRoot);
-
-        return null;
+        return operation.flatMap(searchOperation -> searchFilters
+                .stream()
+                .filter(searchFilter -> searchFilter.couldBeApplied(searchOperation))
+                .findFirst()
+                .map(searchFilter -> searchFilter.apply(cb, filterKey, filterValue, root, subRoot))).orElse(null);
     }
 
     private void filterList() {

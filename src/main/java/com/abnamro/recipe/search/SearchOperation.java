@@ -1,23 +1,24 @@
 package com.abnamro.recipe.search;
 
+import java.util.Optional;
+
 public enum SearchOperation {
 
     CONTAINS, DOES_NOT_CONTAIN, EQUAL, NOT_EQUAL;
 
 
-    public static SearchOperation getSimpleOperation(final String input) {
+    public static Optional<SearchOperation> getOperation(final String input) {
         String lowerInput = input.toLowerCase();
         switch (lowerInput) {
             case "cn":
-                return CONTAINS;
+                return Optional.of(CONTAINS);
             case "nc":
-                return DOES_NOT_CONTAIN;
+                return Optional.of(DOES_NOT_CONTAIN);
             case "eq":
-                return EQUAL;
+                return Optional.of(EQUAL);
             case "ne":
-                return NOT_EQUAL;
-            default:
-                return null;
+                return Optional.of(NOT_EQUAL);
         }
+        return Optional.empty();
     }
 }
