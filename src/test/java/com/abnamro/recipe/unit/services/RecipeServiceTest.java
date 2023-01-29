@@ -7,7 +7,6 @@ import com.abnamro.recipe.config.MessageProvider;
 import com.abnamro.recipe.exceptions.NotFoundException;
 import com.abnamro.recipe.models.Recipe;
 import com.abnamro.recipe.repositories.RecipeRepository;
-import com.abnamro.recipe.search.RecipeSpecificationBuilder;
 import com.abnamro.recipe.services.IngredientService;
 import com.abnamro.recipe.services.RecipeService;
 import org.junit.Test;
@@ -15,7 +14,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -99,8 +97,6 @@ public class RecipeServiceTest {
     @Test(expected = NotFoundException.class)
     public void test_findBySearchCriteria_notFound() {
         RecipeSearchRequest recipeSearchRequest = mock(RecipeSearchRequest.class);
-        RecipeSpecificationBuilder builder = mock(RecipeSpecificationBuilder.class);
-        Pageable pageable = mock(Pageable.class);
         recipeService.findBySearchCriteria(recipeSearchRequest,0,10);
     }
 

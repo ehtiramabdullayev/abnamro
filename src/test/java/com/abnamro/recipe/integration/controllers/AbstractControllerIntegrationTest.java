@@ -1,6 +1,5 @@
 package com.abnamro.recipe.integration.controllers;
 
-import com.abnamro.recipe.utils.TestUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Ignore;
@@ -30,8 +29,8 @@ public class AbstractControllerIntegrationTest {
     @Autowired
     protected MockMvc mockMvc;
 
-    protected ObjectMapper objectMapper = TestUtils.createObjectMapperInstance();
-
+    @Autowired
+    protected ObjectMapper objectMapper;
 
     protected String toJson(Object obj) throws IOException {
         return objectMapper.writeValueAsString(obj);
